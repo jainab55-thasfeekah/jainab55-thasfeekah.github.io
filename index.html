@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Builder | Create Your Portfolio</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+font-family:Arial,sans-serif;
+background:#0b1220;color:#e5e7eb;
+line-height:1.6;
+}
+header{
+padding:25px 5%;text-align:center;
+background:#111e35;border-bottom:1px solid #263b58;
+}
+header h1{color:#38bdf8;font-size:30px}
+header p{color:#b6c4d8;margin-top:5px}
+.container{max-width:1100px;margin:30px auto;padding:15px}
+.layout{
+display:grid;grid-template-columns:1fr 1fr;
+gap:22px;align-items:start;
+}
+.panel{
+background:#17243a;padding:22px;
+border-radius:14px;border:1px solid #293e5c;
+}
+h2{color:#38bdf8;margin-bottom:17px}
+label{display:block;margin:12px 0 5px;font-weight:bold}
+input,textarea,select{
+width:100%;padding:12px;border:1px solid #475569;
+border-radius:7px;background:#0b172a;color:white;
+font-size:14px;
+}
+textarea{resize:vertical;min-height:75px}
+button{
+border:0;padding:12px 17px;border-radius:8px;
+cursor:pointer;font-weight:bold;margin:7px 5px 0 0;
+background:#0284c7;color:white;
+}
+button:hover{background:#0369a1}
+.secondary{background:#475569}
+.green{background:#059669}
+.danger{background:#be123c}
+.preview{
+background:white;color:#1e293b;border-radius:12px;
+padding:25px;min-height:500px;overflow-wrap:anywhere;
+}
+.preview h1{color:#075985;font-size:28px}
+.preview h2{color:#075985;margin-top:20px}
+.preview p{margin:7px 0}
+.preview a{color:#0284c7;overflow-wrap:anywhere}
+.avatar{
+width:105px;height:105px;object-fit:cover;
+border-radius:50%;margin-bottom:15px;
+border:3px solid #38bdf8;
+}
+.skill{
+display:inline-block;background:#e0f2fe;
+color:#075985;padding:6px 12px;
+margin:5px;border-radius:15px;font-size:13px;
+}
+.project{
+background:#f1f5f9;padding:12px;
+margin:10px 0;border-radius:8px;
+}
+.actions{margin-top:18px}
+footer{text-align:center;padding:25px;color:#94a3b8}
+.status{color:#34d399;margin-top:12px;font-size:14px}
+@media(max-width:750px){
+.layout{grid-template-columns:1fr}
+header h1{font-size:23px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🚀 Portfolio Builder</h1>
+<p>Create, customize and download your professional portfolio for free.</p>
+</header>
+
+<div class="container">
+<div class="layout">
+
+<!-- PORTFOLIO FORM -->
+<div class="panel">
+<h2>👤 Personal Information</h2>
+
+<label>Full Name *</label>
+<input id="name" placeholder="Enter your name">
+
+<label>Professional Title</label>
+<input id="role" placeholder="Example: Web Developer">
+
+<label>Profile Photo URL (optional)</label>
+<input id="photo" placeholder="Paste an image URL">
+
+<label>Email</label>
+<input id="email" type="email" placeholder="your@email.com">
+
+<label>Location</label>
+<input id="location" placeholder="Your city">
+
+<label>About Me</label>
+<textarea id="about" placeholder="Write your introduction..."></textarea>
+
+<label>🎓 Education</label>
+<textarea id="education" placeholder="College, degree, year..."></textarea>
+
+<h2 style="margin-top:25px">🛠️ Skills</h2>
+<label>Enter skills separated by commas</label>
+<input id="skills" placeholder="HTML, CSS, JavaScript, Python">
+
+<h2 style="margin-top:25px">🚀 Projects</h2>
+<p style="font-size:13px;color:#94a3b8">
+Add one project per line in this format:
+</p>
+<p style="font-size:13px;color:#38bdf8">
+Project Name | Description | Project URL
+</p>
+<textarea id="projects" rows="6"
+placeholder="Calculator | Scientific calculator | https://example.com&#10;My Website | Personal website | https://example.com"></textarea>
+
+<h2 style="margin-top:25px">🌐 Social Links</h2>
+
+<label>GitHub Profile</label>
+<input id="github" placeholder="https://github.com/username">
+
+<label>LinkedIn Profile</label>
+<input id="linkedin" placeholder="https://linkedin.com/in/username">
+
+<label>🎨 Portfolio Theme</label>
+<select id="theme">
+<option value="blue">Ocean Blue</option>
+<option value="purple">Royal Purple</option>
+<option value="green">Forest Green</option>
+<option value="black">Classic Black</option>
+</select>
+
+<div class="actions">
+<button onclick="generate()">✨ Generate Portfolio</button>
+<button class="green" onclick="saveData()">💾 Save Details</button>
+<button class="secondary" onclick="loadData()">📂 Load Saved Details</button>
+<button class="danger" onclick="clearData()">Clear Form</button>
+</div>
+
+<div class="status" id="status"></div>
+</div>
+
+<!-- LIVE PREVIEW -->
+<div class="panel">
+<h2>👀 Live Portfolio Preview</h2>
+
+<div class="preview" id="preview">
+<div style="text-align:center;padding:70px 10px">
+<h1>Welcome to Your Portfolio!</h1>
+<p>Fill in your details and click Generate Portfolio.</p>
+</div>
+</div>
+
+<div class="actions">
+<button class="green" onclick="downloadPortfolio()">📥 Download Portfolio</button>
+</div>
+
+<p style="font-size:12px;color:#94a3b8;margin-top:12px">
+Download your portfolio as a standalone HTML file.
+</p>
+</div>
+
+</div>
+</div>
+
+<footer>
+<p>Portfolio Builder | Built with HTML, CSS & JavaScript</p>
+<p>Empowering students and developers to showcase their work. 💙</p>
+</footer>
+
+<script>
+const fields=[
+"name","role","photo","email","location","about",
+"education","skills","projects","github","linkedin","theme"
+];
+
+const $=id=>document.getElementById(id);
+
+let generatedHTML="";
+
+function escapeHTML(value){
+return String(value).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",
+'"':"&quot;","'":"&#39;"
+})[c]);
+}
+
+function safeURL(value){
+try{
+const u=new URL(value);
+return ["http:","https:"].includes(u.protocol)?u.href:"";
+}catch(e){return "";}
+}
+
+function generate(){
+const data={};
+fields.forEach(id=>data[id]=$(id).value.trim());
+
+if(!data.name){
+$("status").textContent="Please enter your name first.";
+return;
+}
+
+const colors={
+blue:"#0284c7",
+purple:"#7c3aed",
+green:"#059669",
+black:"#334155"
+};
+const color=colors[data.theme]||colors.blue;
+
+const skills=data.skills.split(",")
+.map(s=>s.trim()).filter(Boolean);
+
+const projects=data.projects.split("\n")
+.map(line=>{
+const parts=line.split("|").map(x=>x.trim());
+return {
+title:parts[0]||"Project",
+description:parts[1]||"",
+url:safeURL(parts[2]||"")
+};
+}).filter(p=>p.title);
+
+const photo=safeURL(data.photo);
+const github=safeURL(data.github);
+const linkedin=safeURL(data.linkedin);
+const email=data.email.includes("@")?
+data.email:"";
+
+const image=photo?
+`<img src="${escapeHTML(photo)}" alt="Profile photo" class="avatar">`:"";
+
+const skillHTML=skills.map(s=>
+`<span class="skill">${escapeHTML(s)}</span>`
+).join("");
+
+const projectHTML=projects.map(p=>`
+<div class="project">
+<h3>${escapeHTML(p.title)}</h3>
+<p>${escapeHTML(p.description)}</p>
+${p.url?`<a href="${escapeHTML(p.url)}" target="_blank" rel="noopener">View Project ↗</a>`:""}
+</div>
+`).join("");
+
+generatedHTML=`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHTML(data.name)} | Portfolio</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;margin:0;background:#f1f5f9;color:#1e293b;line-height:1.7}
+header{background:${color};color:white;text-align:center;padding:60px 20px}
+h1{font-size:36px;margin:10px}
+h2{color:${color};border-bottom:2px solid #e2e8f0;padding-bottom:8px}
+main{max-width:850px;margin:30px auto;padding:25px}
+section{background:white;padding:25px;margin:18px 0;border-radius:12px}
+.avatar{width:110px;height:110px;object-fit:cover;border-radius:50%;border:3px solid white}
+.skill{display:inline-block;background:#e0f2fe;color:#075985;padding:6px 12px;margin:5px;border-radius:15px}
+.project{background:#f1f5f9;padding:15px;margin:12px 0;border-radius:8px}
+a{color:${color};overflow-wrap:anywhere}
+footer{text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<header>
+${image}
+<h1>${escapeHTML(data.name)}</h1>
+<h3>${escapeHTML(data.role)}</h3>
+<p>${escapeHTML(data.location)}</p>
+</header>
+<main>
+<section>
+<h2>About Me</h2>
+<p>${escapeHTML(data.about)}</p>
+</section>
+<section>
+<h2>Education</h2>
+<p>${escapeHTML(data.education)}</p>
+</section>
+<section>
+<h2>Skills</h2>
+${skillHTML}
+</section>
+<section>
+<h2>Projects</h2>
+${projectHTML}
+</section>
+<section>
+<h2>Contact</h2>
+${email?`<p>Email: <a href="mailto:${escapeHTML(email)}">${escapeHTML(email)}</a></p>`:""}
+${github?`<p><a href="${escapeHTML(github)}">GitHub Profile</a></p>`:""}
+${linkedin?`<p><a href="${escapeHTML(linkedin)}">LinkedIn Profile</a></p>`:""}
+</section>
+</main>
+<footer>Created with Portfolio Builder</footer>
+</body>
+</html>`;
+
+$("preview").innerHTML=`
+<div style="background:${color};color:white;text-align:center;padding:30px;border-radius:8px">
+${image}
+<h1 style="color:white">${escapeHTML(data.name)}</h1>
+<h3>${escapeHTML(data.role)}</h3>
+<p>${escapeHTML(data.location)}</p>
+</div>
+<h2>About Me</h2>
+<p>${escapeHTML(data.about)}</p>
+<h2>Education</h2>
+<p>${escapeHTML(data.education)}</p>
+<h2>Skills</h2>
+${skillHTML}
+<h2>Projects</h2>
+${projectHTML}
+<h2>Contact</h2>
+${email?`<p>${escapeHTML(email)}</p>`:""}
+${github?`<p><a href="${escapeHTML(github)}" target="_blank">GitHub Profile</a></p>`:""}
+${linkedin?`<p><a href="${escapeHTML(linkedin)}" target="_blank">LinkedIn Profile</a></p>`:""}
+`;
+
+$("status").textContent="Portfolio generated successfully!";
+}
+
+function saveData(){
+const data={};
+fields.forEach(id=>data[id]=$(id).value);
+try{
+localStorage.setItem("portfolioBuilderData",JSON.stringify(data));
+$("status").textContent="Details saved in this browser!";
+}catch(e){
+$("status").textContent="Unable to save. Check browser storage settings.";
+}
+}
+
+function loadData(){
+try{
+const data=JSON.parse(localStorage.getItem("portfolioBuilderData")||"null");
+if(!data){
+$("status").textContent="No saved portfolio found in this browser.";
+return;
+}
+fields.forEach(id=>{
+if(data[id]!==undefined)$(id).value=data[id];
+});
+generate();
+$("status").textContent="Saved details loaded!";
+}catch(e){
+$("status").textContent="Unable to load saved details.";
+}
+}
+
+function clearData(){
+if(!confirm("Clear all form details?"))return;
+fields.forEach(id=>$(id).value="");
+generatedHTML="";
+$("preview").innerHTML="<h2>Welcome!</h2><p>Fill in your details to begin.</p>";
+$("status").textContent="Form cleared.";
+}
+
+function downloadPortfolio(){
+if(!generatedHTML){
+$("status").textContent="Generate your portfolio first!";
+return;
+}
+const blob=new Blob([generatedHTML],{type:"text/html;charset=utf-8"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=url;
+a.download="my-portfolio.html";
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(url);
+$("status").textContent="Portfolio download started!";
+}
+</script>
+
+</body>
+</html>
